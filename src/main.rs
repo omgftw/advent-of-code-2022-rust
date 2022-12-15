@@ -1,7 +1,9 @@
 mod day1;
+mod day2;
 mod day1_ai;
 mod day2_ai;
 mod day3_ai;
+mod day11_ai;
 
 fn main() {
     println!("Day 1:");
@@ -15,6 +17,13 @@ fn main() {
     // Assertion based on correct values
     assert_eq!(day1.0, 67016);
     assert_eq!(day1.1, 200116);
+
+    // ------------------------------------
+
+    println!("Day 11 - AI:");
+    println!("============");
+    day11_ai::main();
+    println!();
 
     // ------------------------------------
 
