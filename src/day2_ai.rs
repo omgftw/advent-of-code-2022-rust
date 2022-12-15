@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 use std::fs;
 
-pub fn day2() -> Result<(usize, usize), Box<dyn std::error::Error>> {
+pub fn main() -> Result<(usize, usize), Box<dyn std::error::Error>> {
     let mut value: HashMap<&str, usize> = HashMap::new();
     value.insert("rock", 1);
     value.insert("paper", 2);
@@ -61,7 +61,7 @@ pub fn day2() -> Result<(usize, usize), Box<dyn std::error::Error>> {
     for one_round in data.iter() {
         let their_choice = choices[one_round["them"]];
         let round_result = day2_choices[one_round["you"]];
-        let mut your_choice = "";
+        let your_choice: &str;
         if round_result == "draw" {
             your_choice = their_choice;
         } else if round_result == "lose" {

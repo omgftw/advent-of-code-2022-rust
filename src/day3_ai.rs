@@ -1,6 +1,6 @@
 use std::error::Error;
 
-pub fn day3() -> Result<(usize, usize), Box<dyn Error>> {
+pub fn main() -> Result<(usize, usize), Box<dyn Error>> {
     let chars = "abcdefghijklmnopqrstuvwxyz";
     let chars = chars.to_string() + chars.to_uppercase().as_str();
 

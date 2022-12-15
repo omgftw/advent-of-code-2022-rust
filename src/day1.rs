@@ -1,6 +1,6 @@
 use std::error::Error;
 
-pub fn day1() -> Result<(usize, usize), Box<dyn Error>> {
+pub fn main() -> Result<(usize, usize), Box<dyn Error>> {
     let input = std::fs::read_to_string("inputs/day1.txt").expect("Error reading day1.txt");
     let input = input.split("\n\n").collect::<Vec<&str>>();
     let mut input = input

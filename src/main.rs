@@ -1,13 +1,13 @@
 mod day1;
 mod day1_ai;
-mod day2;
-mod day3;
+mod day2_ai;
+mod day3_ai;
 
 fn main() {
     println!("Day 1:");
     println!("======");
     // day1::day1();
-    let day1 = day1::day1().unwrap();
+    let day1 = day1::main().unwrap();
     println!("Part 1: {}", day1.0);
     println!("Part 2: {}", day1.1);
     println!();
@@ -18,14 +18,22 @@ fn main() {
 
     // ------------------------------------
 
-    // println!("Day 1 - AI:");
-    // println!("======");
-    // day1_ai::day1_ai();
-    // println!();
+    println!("Day 1 - AI:");
+    println!("===========");
+    let day1_ai = day1_ai::main().unwrap();
+    println!("Part 1: {}", day1_ai.0);
+    println!("Part 2: {}", day1_ai.1);
+    println!();
 
-    println!("Day 2:");
-    println!("======");
-    let day2 = day2::day2().unwrap();
+    // Assertion based on correct values
+    assert_eq!(day1_ai.0, 67016);
+    assert_eq!(day1_ai.1, 200116);
+
+    // ------------------------------------
+
+    println!("Day 2 - AI:");
+    println!("===========");
+    let day2 = day2_ai::main().unwrap();
     println!("Part 1: {}", day2.0);
     println!("Part 2: {}", day2.1);
     println!();
@@ -36,9 +44,9 @@ fn main() {
 
     // ------------------------------------
 
-    println!("Day 3:");
-    println!("======");
-    let day3 = day3::day3().unwrap();
+    println!("Day 3 - AI:");
+    println!("===========");
+    let day3 = day3_ai::main().unwrap();
     println!("Part 1: {}", day3.0);
     println!("Part 2: {}", day3.1);
     println!();
