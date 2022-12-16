@@ -20,10 +20,16 @@ fn main() {
 
     // ------------------------------------
 
-    println!("Day 11 - AI:");
-    println!("============");
-    day11_ai::main();
+    println!("Day 2:");
+    println!("======");
+    let day2 = day2::main().unwrap();
+    println!("Part 1: {}", day2.0);
+    println!("Part 2: {}", day2.1);
     println!();
+
+    // Assertion based on correct values
+    assert_eq!(day2.0, 8392);
+    assert_eq!(day2.1, 10116);
 
     // ------------------------------------
 
@@ -63,6 +69,13 @@ fn main() {
     // Assertion based on correct values
     assert_eq!(day3.0, 8139);
     assert_eq!(day3.1, 2668);
+
+    // ------------------------------------
+
+    // println!("Day 11 - AI:");
+    // println!("============");
+    // day11_ai::main();
+    // println!();
 
     // ------------------------------------
 }
