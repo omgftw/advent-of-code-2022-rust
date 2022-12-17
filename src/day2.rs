@@ -45,6 +45,11 @@ pub fn main() -> Result<(u32, u32), String> {
         ("paper", 2),
         ("scissors", 3),
     ]);
+    let win_value_map = HashMap::from([
+        ("win", 6),
+        ("draw", 3),
+        ("lose", 0),
+    ]);
 
     let win_map = HashMap::from([
         ("rock", "scissors"),
@@ -52,9 +57,8 @@ pub fn main() -> Result<(u32, u32), String> {
         ("scissors", "paper"),
     ]);
 
-    // read inputs/day2.txt
-    // let input = fs::read_to_string("inputs/example1.txt").expect("Unable to read file");
     let input = fs::read_to_string("inputs/day2.txt").expect("Unable to read file");
+    // let input = fs::read_to_string("inputs/day2.txt").expect("Unable to read file");
     let rounds = parse(&input);
     let mut score1 = 0;
     let mut score2 = 0;
@@ -65,17 +69,40 @@ pub fn main() -> Result<(u32, u32), String> {
         let their_move_value = *move_value_map.get(their_move).unwrap();
         let other_move_value = *move_value_map.get(other_move).unwrap();
         let round_value = if their_move_value == other_move_value {
-            3 // tie
-        // } else if their_move_value == (other_move_value + 1) % 3 {
+            win_value_map.get("draw").unwrap()
         } else if win_map.get(other_move).unwrap() == &their_move {
-            6 // win
+            win_value_map.get("win").unwrap()
         } else {
-            0 // lose
+            win_value_map.get("lose").unwrap()
         };
 
-
         score1 += round_value + move_value_map.get(other_move).unwrap();
+
+        let needed_result = *needed_result_map.get(&round.other.as_str()).unwrap();
+        let needed_move = if needed_result == "win" {
+            let mut key = "";
+            for (k, v) in win_map.iter() {
+                if v == &their_move {
+                    key = k;
+                }
+            }
+            key
+        } else if needed_result == "draw" {
+            their_move
+        } else {
+            // find their_move in win_map by value
+            win_map.get(their_move).unwrap()
+            // let mut key = "";
+            // for (k, v) in win_map.iter() {
+            //     if v == &their_move {
+            //         key = k;
+            //     }
+            // }
+            // key
+        };
+
+        score2 += win_value_map.get(needed_result).unwrap() + move_value_map.get(needed_move).unwrap();
     }
 
-    return Ok((score1, 0));
+    return Ok((score1, score2));
 }
