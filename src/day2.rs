@@ -6,8 +6,6 @@ struct RpsRound {
     other: String,
 }
 
-// map for a,b,c to rock,paper,scissors
-
 fn parse(input: &str) -> Vec<RpsRound> {
     input
         .lines()
@@ -57,13 +55,12 @@ pub fn main() -> Result<(u32, u32), String> {
         ("scissors", "paper"),
     ]);
 
+    // let input = fs::read_to_string("inputs/example2.txt").expect("Unable to read file");
     let input = fs::read_to_string("inputs/day2.txt").expect("Unable to read file");
-    // let input = fs::read_to_string("inputs/day2.txt").expect("Unable to read file");
     let rounds = parse(&input);
     let mut score1 = 0;
     let mut score2 = 0;
     for round in rounds {
-        // index of their_move in this round
         let their_move = *their_move_map.get(&round.their_move.as_str()).unwrap();
         let other_move = *other_move_map.get(&round.other.as_str()).unwrap();
         let their_move_value = *move_value_map.get(their_move).unwrap();
@@ -80,25 +77,11 @@ pub fn main() -> Result<(u32, u32), String> {
 
         let needed_result = *needed_result_map.get(&round.other.as_str()).unwrap();
         let needed_move = if needed_result == "win" {
-            let mut key = "";
-            for (k, v) in win_map.iter() {
-                if v == &their_move {
-                    key = k;
-                }
-            }
-            key
+            win_map.iter().find(|(_, v)| **v == their_move).unwrap().0
         } else if needed_result == "draw" {
             their_move
         } else {
-            // find their_move in win_map by value
             win_map.get(their_move).unwrap()
-            // let mut key = "";
-            // for (k, v) in win_map.iter() {
-            //     if v == &their_move {
-            //         key = k;
-            //     }
-            // }
-            // key
         };
 
         score2 += win_value_map.get(needed_result).unwrap() + move_value_map.get(needed_move).unwrap();
