@@ -1,9 +1,11 @@
 mod day1;
 mod day2;
+mod day6;
 mod day1_ai;
 mod day2_ai;
 mod day3_ai;
 mod day11_ai;
+mod day13;
 
 fn main() {
     println!("Day 1:");
@@ -30,6 +32,19 @@ fn main() {
     // Assertion based on correct values
     assert_eq!(day2.0, 8392);
     assert_eq!(day2.1, 10116);
+
+    // ------------------------------------
+
+    println!("Day 6:");
+    println!("======");
+    let day6 = day6::main().unwrap();
+    println!("Part 1: {}", day6.0);
+    println!("Part 2: {}", day6.1);
+    println!();
+
+    // Assertion based on correct values
+    assert_eq!(day6.0, 1909);
+    assert_eq!(day6.1, 3380);
 
     // ------------------------------------
 
@@ -76,6 +91,19 @@ fn main() {
     // println!("============");
     // day11_ai::main();
     // println!();
+
+    // ------------------------------------
+
+    println!("Day 13 - AI:");
+    println!("============");
+    let day13 = day13::main().unwrap();
+    println!("Part 1: {}", day13.0);
+    println!("Part 2: {}", day13.1);
+    println!();
+
+    // Assertion based on correct values
+    assert_eq!(day13.0, 5605);
+    assert_eq!(day13.1, 24969);
 
     // ------------------------------------
 }

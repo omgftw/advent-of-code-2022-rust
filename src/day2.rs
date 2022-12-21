@@ -73,8 +73,6 @@ pub fn main() -> Result<(u32, u32), String> {
             win_value_map.get("lose").unwrap()
         };
 
-        score1 += round_value + move_value_map.get(other_move).unwrap();
-
         let needed_result = *needed_result_map.get(&round.other.as_str()).unwrap();
         let needed_move = if needed_result == "win" {
             win_map.iter().find(|(_, v)| **v == their_move).unwrap().0
@@ -84,6 +82,7 @@ pub fn main() -> Result<(u32, u32), String> {
             win_map.get(their_move).unwrap()
         };
 
+        score1 += round_value + move_value_map.get(other_move).unwrap();
         score2 += win_value_map.get(needed_result).unwrap() + move_value_map.get(needed_move).unwrap();
     }
 
