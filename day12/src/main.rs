@@ -52,6 +52,41 @@ fn find_viable_neighbors(board: &mut Vec<Vec<BoardPoint>>, point: &Point) -> Vec
     neighbors
 }
 
+fn process_queue(queue: &mut Vec<Path>, board: &mut Vec<Vec<BoardPoint>>, target: &Point) -> Option<Path> {
+    while !queue.is_empty() {
+        let path = queue[0];
+        queue.remove(0);
+        if path.point.elevation == target.elevation {
+            println!("Found end point: {:?}", path.point);
+            return Some(path);
+        }
+        let neighbors = find_viable_neighbors(board, &path.point);
+        for neighbor in neighbors.iter() {
+            queue.push(Path {
+                point: *neighbor,
+                length: path.length + 1,
+            });
+        }
+    }
+    None
+}
+
+fn visualize_grid(board: &Vec<Vec<BoardPoint>>, elevation_order: &str, final_path: &Path) {
+    for y in 0..board.len() {
+        for x in 0..board[0].len() {
+            let point = &board[y][x];
+            if point.pos.x == final_path.point.x && point.pos.y == final_path.point.y {
+                print!("[=]");
+            } else if point.visited {
+                print!("[{}]", elevation_order.chars().nth(point.pos.elevation as usize).unwrap());
+            } else {
+                print!(" {} ", elevation_order.chars().nth(point.pos.elevation as usize).unwrap());
+            }
+        }
+        println!();
+    }
+}
+
 fn main() {
     let elevation_order = "SabcdefghijklmnopqrstuvwxyzE";
     // let input = include_str!("example.txt");
@@ -93,12 +128,20 @@ fn main() {
         .unwrap()
         .pos;
 
-    let max_elevation = board
+    // find end point
+    let end = board
         .iter()
         .flat_map(|row| row.iter())
-        .map(|point| point.pos.elevation)
-        .max()
-        .unwrap();
+        .find(|point| point.pos.elevation == (elevation_order.len() - 1) as isize)
+        .unwrap()
+        .pos;
+
+    // let max_elevation = board
+    //     .iter()
+    //     .flat_map(|row| row.iter())
+    //     .map(|point| point.pos.elevation)
+    //     .max()
+    //     .unwrap();
 
     // let mut queue: Vec<Point> = vec![start];
     let mut queue: Vec<Path> = vec![Path {
@@ -107,44 +150,31 @@ fn main() {
     }];
     board[start.y][start.x].visited = true;
 
-    let mut final_path: Path = Path {
-        point: start,
-        length: 0,
-    };
+    // let mut final_path: Path = Path {
+    //     point: start,
+    //     length: 0,
+    // };
 
-    while !queue.is_empty() {
-        let path = queue[0];
-        final_path = path;
-        queue.remove(0);
-        if path.point.elevation == max_elevation {
-            println!("Found end point: {:?}", path.point);
-            // part1 = path.length;
-            final_path = path;
-            break;
-        }
-        let neighbors = find_viable_neighbors(&mut board, &path.point);
-        for neighbor in neighbors.iter() {
-            queue.push(Path {
-                point: *neighbor,
-                length: path.length + 1,
-            });
-        }
-    }
+    let final_path = process_queue(&mut queue, &mut board, &end).unwrap();
 
-    // // visualize the grid
-    // for y in 0..board.len() {
-    //     for x in 0..board[0].len() {
-    //         let point = &board[y][x];
-    //         if point.pos.x == final_path.point.x && point.pos.y == final_path.point.y {
-    //             print!("[=]");
-    //         } else if point.visited {
-    //             print!("[{}]", elevation_order.chars().nth(point.pos.elevation as usize).unwrap());
-    //         } else {
-    //             print!(" {} ", elevation_order.chars().nth(point.pos.elevation as usize).unwrap());
-    //         }
+    // while !queue.is_empty() {
+    //     let path = queue[0];
+    //     final_path = path;
+    //     queue.remove(0);
+    //     if path.point.elevation == max_elevation {
+    //         println!("Found end point: {:?}", path.point);
+    //         // part1 = path.length;
+    //         final_path = path;
+    //         break;
     //     }
-    //     println!();
+    //     let neighbors = find_viable_neighbors(&mut board, &path.point);
+    //     for neighbor in neighbors.iter() {
+    //         queue.push(Path {
+    //             point: *neighbor,
+    //             length: path.length + 1,
+    //         });
+    //     }
     // }
-
+    
     println!("Part 1: {}", final_path.length);
 }
