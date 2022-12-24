@@ -1,3 +1,14 @@
+use clap::Parser;
+
+/// Simple program to greet a person
+#[derive(Parser, Debug)]
+// #[command(author, version, about, long_about = None)]
+struct Args {
+    /// Visualize the final state of the board
+    #[arg(short, long)]
+    visualize: bool,
+}
+
 #[derive(Clone, Copy, Debug)]
 struct Point {
     x: usize,
@@ -15,6 +26,39 @@ struct BoardPoint {
 struct Path {
     point: Point,
     length: usize,
+}
+
+fn get_grid(input: &str) -> Vec<Vec<BoardPoint>> {
+    let elevation_order = "SabcdefghijklmnopqrstuvwxyzE";
+    let grid = input
+        .lines()
+        .map(|line| {
+            line.chars()
+                .map(|c| elevation_order.find(c).unwrap())
+                .collect::<Vec<usize>>()
+        })
+        .collect::<Vec<Vec<usize>>>();
+
+    // map grid into BoardPoint
+    let board = grid
+        .iter()
+        .enumerate()
+        .map(|(row, row_items)| {
+            row_items
+                .iter()
+                .enumerate()
+                .map(|(col, item)| BoardPoint {
+                    pos: Point {
+                        x: col,
+                        y: row,
+                        elevation: *item as isize,
+                    },
+                    visited: false,
+                })
+                .collect::<Vec<BoardPoint>>()
+        })
+        .collect::<Vec<Vec<BoardPoint>>>();
+    board
 }
 
 fn find_viable_neighbors(board: &mut Vec<Vec<BoardPoint>>, point: &Point) -> Vec<Point> {
@@ -92,34 +136,36 @@ fn main() {
     // let input = include_str!("example.txt");
     let input = include_str!("input.txt");
     // get a grid of items from input as usize based on index in elevation order
-    let grid = input
-        .lines()
-        .map(|line| {
-            line.chars()
-                .map(|c| elevation_order.find(c).unwrap())
-                .collect::<Vec<usize>>()
-        })
-        .collect::<Vec<Vec<usize>>>();
+    // let grid = input
+    //     .lines()
+    //     .map(|line| {
+    //         line.chars()
+    //             .map(|c| elevation_order.find(c).unwrap())
+    //             .collect::<Vec<usize>>()
+    //     })
+    //     .collect::<Vec<Vec<usize>>>();
+    //
+    // // map grid into BoardPoint
+    // let mut board = grid
+    //     .iter()
+    //     .enumerate()
+    //     .map(|(row, row_items)| {
+    //         row_items
+    //             .iter()
+    //             .enumerate()
+    //             .map(|(col, item)| BoardPoint {
+    //                 pos: Point {
+    //                     x: col,
+    //                     y: row,
+    //                     elevation: *item as isize,
+    //                 },
+    //                 visited: false,
+    //             })
+    //             .collect::<Vec<BoardPoint>>()
+    //     })
+    //     .collect::<Vec<Vec<BoardPoint>>>();
 
-    // map grid into BoardPoint
-    let mut board = grid
-        .iter()
-        .enumerate()
-        .map(|(row, row_items)| {
-            row_items
-                .iter()
-                .enumerate()
-                .map(|(col, item)| BoardPoint {
-                    pos: Point {
-                        x: col,
-                        y: row,
-                        elevation: *item as isize,
-                    },
-                    visited: false,
-                })
-                .collect::<Vec<BoardPoint>>()
-        })
-        .collect::<Vec<Vec<BoardPoint>>>();
+    let mut board = get_grid(input);
 
     let start = board
         .iter()
@@ -150,31 +196,27 @@ fn main() {
     }];
     board[start.y][start.x].visited = true;
 
-    // let mut final_path: Path = Path {
-    //     point: start,
-    //     length: 0,
-    // };
-
     let final_path = process_queue(&mut queue, &mut board, &end).unwrap();
 
-    // while !queue.is_empty() {
-    //     let path = queue[0];
-    //     final_path = path;
-    //     queue.remove(0);
-    //     if path.point.elevation == max_elevation {
-    //         println!("Found end point: {:?}", path.point);
-    //         // part1 = path.length;
-    //         final_path = path;
-    //         break;
-    //     }
-    //     let neighbors = find_viable_neighbors(&mut board, &path.point);
-    //     for neighbor in neighbors.iter() {
-    //         queue.push(Path {
-    //             point: *neighbor,
-    //             length: path.length + 1,
-    //         });
-    //     }
-    // }
-    
+    let args = Args::parse();
+    if args.visualize {
+        visualize_grid(&board, elevation_order, &final_path);
+    }
+
+    let mut board = get_grid(input);
+    // find all points in board with an elevation of 1
+    let mut queue = board
+        .iter()
+        .flat_map(|row| row.iter())
+        .filter(|point| point.pos.elevation == 1)
+        .map(|point| Path {
+            point: point.pos,
+            length: 0,
+        })
+        .collect::<Vec<Path>>();
+
+    let final_path_part2 = process_queue(&mut queue, &mut board, &end).unwrap();
+
     println!("Part 1: {}", final_path.length);
+    println!("Part 2: {}", final_path_part2.length);
 }
