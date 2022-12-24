@@ -1,5 +1,3 @@
-use std::fs;
-
 fn is_unique(chars: &[char]) -> bool {
     let mut unique = true;
     for (i, c) in chars.iter().enumerate() {
@@ -13,7 +11,7 @@ fn is_unique(chars: &[char]) -> bool {
     unique
 }
 
-fn process_stream(input: String, marker_length: usize) -> usize {
+fn process_stream(input: &str, marker_length: usize) -> usize {
     let char_window = input.chars().collect::<Vec<char>>();
     for (index, chars) in char_window.windows(marker_length).enumerate() {
         if is_unique(chars) {
@@ -23,9 +21,10 @@ fn process_stream(input: String, marker_length: usize) -> usize {
     0
 }
 
-pub fn main() -> Result<(usize, usize), String> {
-    let input = fs::read_to_string("data/day6-input.txt").expect("Unable to read file");
-    let part1 = process_stream(input.clone(), 4);
+pub fn main() {
+    let input = include_str!("input.txt");
+    let part1 = process_stream(input, 4);
     let part2 = process_stream(input, 14);
-    return Ok((part1, part2));
+    println!("Part 1: {}", part1);
+    println!("Part 2: {}", part2);
 }
