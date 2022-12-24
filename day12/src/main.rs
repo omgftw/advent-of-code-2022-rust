@@ -1,8 +1,6 @@
 use clap::Parser;
 
-/// Simple program to greet a person
 #[derive(Parser, Debug)]
-// #[command(author, version, about, long_about = None)]
 struct Args {
     /// Visualize the final state of the board
     #[arg(short, long)]
@@ -39,7 +37,6 @@ fn get_grid(input: &str) -> Vec<Vec<BoardPoint>> {
         })
         .collect::<Vec<Vec<usize>>>();
 
-    // map grid into BoardPoint
     let board = grid
         .iter()
         .enumerate()
@@ -63,7 +60,6 @@ fn get_grid(input: &str) -> Vec<Vec<BoardPoint>> {
 
 fn find_viable_neighbors(board: &mut Vec<Vec<BoardPoint>>, point: &Point) -> Vec<Point> {
     let mut neighbors = Vec::new();
-    // Check around point to see if any are viable
     if point.x > 0 {
         let left = &board[point.y][point.x - 1];
         if !left.visited && (left.pos.elevation == point.elevation + 1 || left.pos.elevation <= point.elevation) {
@@ -135,35 +131,6 @@ fn main() {
     let elevation_order = "SabcdefghijklmnopqrstuvwxyzE";
     // let input = include_str!("example.txt");
     let input = include_str!("input.txt");
-    // get a grid of items from input as usize based on index in elevation order
-    // let grid = input
-    //     .lines()
-    //     .map(|line| {
-    //         line.chars()
-    //             .map(|c| elevation_order.find(c).unwrap())
-    //             .collect::<Vec<usize>>()
-    //     })
-    //     .collect::<Vec<Vec<usize>>>();
-    //
-    // // map grid into BoardPoint
-    // let mut board = grid
-    //     .iter()
-    //     .enumerate()
-    //     .map(|(row, row_items)| {
-    //         row_items
-    //             .iter()
-    //             .enumerate()
-    //             .map(|(col, item)| BoardPoint {
-    //                 pos: Point {
-    //                     x: col,
-    //                     y: row,
-    //                     elevation: *item as isize,
-    //                 },
-    //                 visited: false,
-    //             })
-    //             .collect::<Vec<BoardPoint>>()
-    //     })
-    //     .collect::<Vec<Vec<BoardPoint>>>();
 
     let mut board = get_grid(input);
 
@@ -174,7 +141,6 @@ fn main() {
         .unwrap()
         .pos;
 
-    // find end point
     let end = board
         .iter()
         .flat_map(|row| row.iter())
@@ -182,14 +148,6 @@ fn main() {
         .unwrap()
         .pos;
 
-    // let max_elevation = board
-    //     .iter()
-    //     .flat_map(|row| row.iter())
-    //     .map(|point| point.pos.elevation)
-    //     .max()
-    //     .unwrap();
-
-    // let mut queue: Vec<Point> = vec![start];
     let mut queue: Vec<Path> = vec![Path {
         point: start,
         length: 0,
@@ -204,7 +162,6 @@ fn main() {
     }
 
     let mut board = get_grid(input);
-    // find all points in board with an elevation of 1
     let mut queue = board
         .iter()
         .flat_map(|row| row.iter())
