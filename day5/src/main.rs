@@ -23,15 +23,18 @@ fn parse_commands(input: Vec<&str>) -> Vec<Command> {
     commands
 }
 
-fn main() {
-    // let input = include_str!("example.txt");
-    let input = include_str!("input.txt");
+fn parse_input(input: &str) -> (Vec<Vec<char>>, Vec<Command>) {
     let mut parts = input.split("\n\n");
     let crates = parts.next().unwrap().lines().collect::<Vec<_>>();
     let commands = parts.next().unwrap().lines().collect::<Vec<_>>();
 
     let (last, crates) = crates.split_last().unwrap();
-    let max_stack = last.split_whitespace().last().unwrap().parse::<usize>().unwrap();
+    let max_stack = last
+        .split_whitespace()
+        .last()
+        .unwrap()
+        .parse::<usize>()
+        .unwrap();
 
     let mut stacks: Vec<Vec<char>> = vec![vec![]; max_stack];
 
@@ -48,49 +51,28 @@ fn main() {
         stack.reverse();
     }
 
-    let mut part2_stacks = stacks.clone();
-
-    // let r = Regex::new(r"move (\d+) from (\d+) to (\d+)").unwrap();
-
     let commands = parse_commands(commands);
 
+    (stacks, commands)
+}
+
+fn main() {
+    // let input = include_str!("example.txt");
+    let input = include_str!("input.txt");
+    let (mut stacks, commands) = parse_input(input);
+    let mut part2_stacks = stacks.clone();
+
     for command in commands.iter() {
-        // let r = Regex::new(r"move (\d+) from (\d+) to (\d+)").unwrap();
-        // let caps = r.captures(command).unwrap();
-        // let amount = caps[1].parse::<usize>().unwrap();
-        // let from = caps[2].parse::<usize>().unwrap();
-        // let to = caps[3].parse::<usize>().unwrap();
-        // let r = command.split_whitespace().collect::<Vec<_>>();
-        // let amount = r[1].parse::<usize>().unwrap();
-        // let from = r[3].parse::<usize>().unwrap();
-        // let to = r[5].parse::<usize>().unwrap();
-
-
         for _ in 0..command.amount {
-            let item = stacks[command.from-1].pop().unwrap();
-            stacks[command.to-1].push(item);
+            let item = stacks[command.from - 1].pop().unwrap();
+            stacks[command.to - 1].push(item);
         }
     }
 
     for command in commands.iter() {
-        // let r = Regex::new(r"move (\d+) from (\d+) to (\d+)").unwrap();
-        // let caps = r.captures(command).unwrap();
-        // let amount = caps[1].parse::<usize>().unwrap();
-        // let from = caps[2].parse::<usize>().unwrap();
-        // let to = caps[3].parse::<usize>().unwrap();
-        // let r = command.split_whitespace().collect::<Vec<_>>();
-        // let amount = r[1].parse::<usize>().unwrap();
-        // let from = r[3].parse::<usize>().unwrap();
-        // let to = r[5].parse::<usize>().unwrap();
-
-        // rewrite this
-        let mut items = part2_stacks[command.from-1].iter().rev().take(command.amount).cloned().collect::<Vec<_>>();
-        let from_len = part2_stacks[command.from-1].len();
-        part2_stacks[command.from-1].truncate( from_len - command.amount);
-        items.reverse();
-        for item in items.iter() {
-            part2_stacks[command.to-1].push(*item);
-        }
+        let part2_stacks_len = part2_stacks[command.from - 1].len();
+        let items = part2_stacks[command.from - 1].split_off(part2_stacks_len - command.amount);
+        part2_stacks[command.to - 1].extend(items);
     }
 
     let mut part1 = "".to_string();
@@ -105,4 +87,6 @@ fn main() {
 
     println!("Part 1: {}", part1);
     println!("Part 2: {}", part2);
+    assert_eq!(part1, "BWNCQRMDB");
+    assert_eq!(part2, "NHWZCBNBF");
 }
