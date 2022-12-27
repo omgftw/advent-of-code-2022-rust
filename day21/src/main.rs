@@ -2,9 +2,7 @@ use std::collections::HashMap;
 
 fn handle_job(job: &str, monkey_map: &HashMap<&str, &str>) -> i64 {
     return match job.parse::<i64>() {
-        Ok(job) => {
-            job
-        },
+        Ok(job) => job,
         Err(_) => {
             let mut parts = job.split_whitespace();
             let monkey1 = parts.next().unwrap();
@@ -21,7 +19,7 @@ fn handle_job(job: &str, monkey_map: &HashMap<&str, &str>) -> i64 {
                 "/" => monkey1 / monkey2,
                 _ => panic!("Unknown operator"),
             }
-        },
+        }
     };
 }
 
@@ -36,9 +34,9 @@ fn main() {
         monkey_map.insert(name, job);
     }
 
-    let result = handle_job(monkey_map["root"], &monkey_map);
+    let part1 = handle_job(monkey_map["root"], &monkey_map);
 
-    println!("Part1: {}", result);
+    println!("Part1: {}", part1);
 
-    assert_eq!(result, 364367103397416);
+    assert_eq!(part1, 364367103397416);
 }
