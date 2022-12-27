@@ -16,10 +16,10 @@ enum Outcome {
 
 #[derive(Debug)]
 struct Round {
-    your_move: Move,
-    their_move: Move,
-    outcome: Outcome,
-    beats: HashMap<Move, Move>,
+    // your_move: Move,
+    // their_move: Move,
+    // outcome: Outcome,
+    // beats: HashMap<Move, Move>,
     score: i32,
 }
 
@@ -40,7 +40,6 @@ impl Round {
         choice_score.insert(Move::Paper, 2);
         choice_score.insert(Move::Scissors, 3);
 
-
         let mut outcome_result: Outcome = outcome.unwrap_or(Outcome::Draw);
         let mut your_move_result: Move = your_move.unwrap_or(Move::Rock);
 
@@ -59,20 +58,14 @@ impl Round {
             };
         }
 
-
-        // let outcome = match your_move {
-        //     m if m == their_move => Outcome::Draw,
-        //     m if their_move == *beats.get(&m).unwrap() => Outcome::Win,
-        //     _ => Outcome::Lose,
-        // };
-
-        let score = outcome_score.get(&outcome_result).unwrap() + choice_score.get(&your_move_result).unwrap();
+        let score = outcome_score.get(&outcome_result).unwrap()
+            + choice_score.get(&your_move_result).unwrap();
 
         Round {
-            your_move: your_move_result,
-            their_move,
-            outcome: outcome_result,
-            beats,
+            // your_move: your_move_result,
+            // their_move,
+            // outcome: outcome_result,
+            // beats,
             score,
         }
     }
@@ -145,4 +138,6 @@ fn main() {
 
     println!("Part 1: {}", part1);
     println!("Part 2: {}", part2);
+    assert_eq!(part1, 8392);
+    assert_eq!(part2, 10116);
 }

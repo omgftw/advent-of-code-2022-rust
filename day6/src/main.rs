@@ -27,4 +27,6 @@ pub fn main() {
     let part2 = process_stream(input, 14);
     println!("Part 1: {}", part1);
     println!("Part 2: {}", part2);
+    assert_eq!(part1, 1909);
+    assert_eq!(part2, 3380);
 }

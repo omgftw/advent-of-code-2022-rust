@@ -11,6 +11,10 @@ pub fn main() {
         .collect::<Vec<usize>>();
     input.sort_by(|a, b| b.cmp(a));
 
-    println!("Part 1: {}", input[0]);
-    println!("Part 2: {}", input.iter().take(3).sum::<usize>());
+    let part1 = input[0];
+    let part2 = input.iter().take(3).sum::<usize>();
+    println!("Part 1: {}", part1);
+    println!("Part 2: {}", part2);
+    assert_eq!(part1, 67016);
+    assert_eq!(part2, 200116);
 }

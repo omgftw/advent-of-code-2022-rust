@@ -20,7 +20,6 @@ fn main() {
 
     let part1 = priorities.iter().sum::<usize>();
 
-
     let groups = input.lines().collect::<Vec<_>>();
     let groups = groups.chunks(3).collect::<Vec<_>>();
 
@@ -29,7 +28,11 @@ fn main() {
         // find the common item in the group
         let mut common = group[0].chars().collect::<Vec<_>>();
         for elf in group[1..].iter() {
-            common = common.iter().filter(|&x| elf.contains(*x)).copied().collect::<Vec<_>>();
+            common = common
+                .iter()
+                .filter(|&x| elf.contains(*x))
+                .copied()
+                .collect::<Vec<_>>();
         }
         priorities.push(priority.iter().position(|&c| c == common[0]).unwrap() + 1);
     }
@@ -38,4 +41,6 @@ fn main() {
 
     println!("Part 1: {}", part1);
     println!("Part 2: {}", part2);
+    assert_eq!(part1, 8139);
+    assert_eq!(part2, 2668);
 }

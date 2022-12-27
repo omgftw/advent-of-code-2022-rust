@@ -62,25 +62,34 @@ fn find_viable_neighbors(board: &mut Vec<Vec<BoardPoint>>, point: &Point) -> Vec
     let mut neighbors = Vec::new();
     if point.x > 0 {
         let left = &board[point.y][point.x - 1];
-        if !left.visited && (left.pos.elevation == point.elevation + 1 || left.pos.elevation <= point.elevation) {
+        if !left.visited
+            && (left.pos.elevation == point.elevation + 1 || left.pos.elevation <= point.elevation)
+        {
             neighbors.push(left.pos);
         }
     }
     if point.x < board[0].len() - 1 {
         let right = &board[point.y][point.x + 1];
-        if !right.visited && (right.pos.elevation == point.elevation + 1 || right.pos.elevation <= point.elevation) {
+        if !right.visited
+            && (right.pos.elevation == point.elevation + 1
+                || right.pos.elevation <= point.elevation)
+        {
             neighbors.push(right.pos);
         }
     }
     if point.y > 0 {
         let up = &board[point.y - 1][point.x];
-        if !up.visited && (up.pos.elevation == point.elevation + 1 || up.pos.elevation <= point.elevation) {
+        if !up.visited
+            && (up.pos.elevation == point.elevation + 1 || up.pos.elevation <= point.elevation)
+        {
             neighbors.push(up.pos);
         }
     }
     if point.y < board.len() - 1 {
         let down = &board[point.y + 1][point.x];
-        if !down.visited && (down.pos.elevation == point.elevation + 1 || down.pos.elevation <= point.elevation) {
+        if !down.visited
+            && (down.pos.elevation == point.elevation + 1 || down.pos.elevation <= point.elevation)
+        {
             neighbors.push(down.pos);
         }
     }
@@ -92,7 +101,11 @@ fn find_viable_neighbors(board: &mut Vec<Vec<BoardPoint>>, point: &Point) -> Vec
     neighbors
 }
 
-fn process_queue(queue: &mut Vec<Path>, board: &mut Vec<Vec<BoardPoint>>, target: &Point) -> Option<Path> {
+fn process_queue(
+    queue: &mut Vec<Path>,
+    board: &mut Vec<Vec<BoardPoint>>,
+    target: &Point,
+) -> Option<Path> {
     while !queue.is_empty() {
         let path = queue[0];
         queue.remove(0);
@@ -118,9 +131,21 @@ fn visualize_grid(board: &Vec<Vec<BoardPoint>>, elevation_order: &str, final_pat
             if point.pos.x == final_path.point.x && point.pos.y == final_path.point.y {
                 print!("[=]");
             } else if point.visited {
-                print!("[{}]", elevation_order.chars().nth(point.pos.elevation as usize).unwrap());
+                print!(
+                    "[{}]",
+                    elevation_order
+                        .chars()
+                        .nth(point.pos.elevation as usize)
+                        .unwrap()
+                );
             } else {
-                print!(" {} ", elevation_order.chars().nth(point.pos.elevation as usize).unwrap());
+                print!(
+                    " {} ",
+                    elevation_order
+                        .chars()
+                        .nth(point.pos.elevation as usize)
+                        .unwrap()
+                );
             }
         }
         println!();
@@ -176,4 +201,6 @@ fn main() {
 
     println!("Part 1: {}", final_path.length);
     println!("Part 2: {}", final_path_part2.length);
+    assert_eq!(final_path.length, 330);
+    assert_eq!(final_path_part2.length, 321);
 }

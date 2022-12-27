@@ -42,4 +42,6 @@ fn main() {
 
     println!("Part 1: {}", entire_overlaps);
     println!("Part 2: {}", any_overlaps);
+    assert_eq!(entire_overlaps, 524);
+    assert_eq!(any_overlaps, 798);
 }
