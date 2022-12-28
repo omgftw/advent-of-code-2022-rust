@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 struct Item {
     path: String,
     parent_path: String,
@@ -8,8 +8,30 @@ struct Item {
     size: u64,
 }
 
-fn main() {
-    let input = include_str!("example.txt");
+fn handle_cd(name: &str, mut cur_path: String, items: &mut HashMap<String, Item>) -> String {
+    if name == ".." {
+        let item = &items[&cur_path];
+        cur_path = item.parent_path.clone();
+        return cur_path;
+    }
+    if name == "/" {
+        cur_path = "/".to_string();
+        return cur_path;
+    }
+    let path = cur_path.to_string() + name + "/";
+    if !items.contains_key(&path) {
+        let item = Item {
+            path: path.clone(),
+            parent_path: cur_path.to_string(),
+            is_dir: true,
+            size: 0,
+        };
+        items.insert(path.clone(), item);
+    }
+    path
+}
+
+fn parse_terminal(input: &str) -> HashMap<String, Item> {
     let mut items: HashMap<String, Item> = HashMap::new();
     items.insert(
         "/".to_string(),
@@ -25,30 +47,11 @@ fn main() {
         let parts = line.split_whitespace().collect::<Vec<_>>();
         if parts[0] == "$" {
             if parts[1] == "cd" {
-                let name = parts[2];
-                if name == ".." {
-                    let item = &items[&cur_path];
-                    cur_path = item.parent_path.clone();
-                    continue;
-                }
-                if name == "/" {
-                    cur_path = "/".to_string();
-                    continue;
-                }
-                let path = cur_path.to_string() + name + "/";
-                if !items.contains_key(&path) {
-                    let item = Item {
-                        path: path.clone(),
-                        parent_path: cur_path.to_string(),
-                        is_dir: true,
-                        size: 0,
-                    };
-                    items.insert(path.clone(), item);
-                }
-                cur_path = path;
-            } else if parts[1] == "ls" {
-                println!();
+                cur_path = handle_cd(parts[2], cur_path, &mut items);
             }
+            // else if parts[1] == "ls" {
+            //     println!();
+            // }
         }
 
         else if parts[0] == "dir" {
@@ -78,6 +81,18 @@ fn main() {
             };
             items.insert(path.clone(), item);
             // }
+        }
+    }
+    items
+}
+
+fn main() {
+    let input = include_str!("example.txt");
+    let mut items = parse_terminal(input);
+    for item in items.clone().values_mut() {
+        if !item.is_dir {
+            let parent = items.get_mut(&item.parent_path).unwrap();
+            parent.size += item.size;
         }
     }
 
