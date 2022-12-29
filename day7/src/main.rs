@@ -86,15 +86,36 @@ fn parse_terminal(input: &str) -> HashMap<String, Item> {
     items
 }
 
+fn propagate_size(item: &Item, items: &mut HashMap<String, Item>) {
+    let mut queue = vec![item.parent_path.clone()];
+    while !queue.is_empty() {
+        let path = queue.pop().unwrap();
+        if path == "/" {
+            break;
+        }
+        let parent = items.get_mut(&path).unwrap();
+        // let parent = items.get_mut(path).unwrap();
+        // let item = &items[path];
+        if parent.is_dir {
+            parent.size += item.size;
+            queue.push(parent.parent_path.clone());
+        }
+    }
+}
+
 fn main() {
     let input = include_str!("example.txt");
     let mut items = parse_terminal(input);
-    for item in items.clone().values_mut() {
-        if !item.is_dir {
-            let parent = items.get_mut(&item.parent_path).unwrap();
-            parent.size += item.size;
-        }
+    for item in items.clone().values_mut() { //.clone().values_mut()
+        propagate_size(item, &mut items);
     }
 
-    println!("{:#?}", items);
+    let items_under_100k = items
+        .values()
+        .filter(|item| item.is_dir && item.size < 100_000)
+        .collect::<Vec<_>>();
+
+    // sum size of all files under 100k
+    let sum = items_under_100k.iter().map(|item| item.size).sum::<u64>();
+    println!("{:#?}", sum);
 }
